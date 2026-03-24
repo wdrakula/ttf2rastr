@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+
+font_preview
+preview.ppm
+sample.ppm
+
+.DS_Store
