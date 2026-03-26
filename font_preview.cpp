@@ -270,12 +270,12 @@ int main(int argc, char** argv) {
     size_t height = FONT_LINE_HEIGHT + 8u;
     size_t spacing = 1u;
     size_t fallback_width = FONT_SIZE / 2u;
-    size_t max_above_baseline = FONT_ASCENT;
-    size_t max_below_baseline = FONT_DESCENT;
+    int min_y = 0;
+    int max_y = (int)FONT_LINE_HEIGHT;
     uint8_t* image;
     size_t i;
     size_t pen_x = 4u;
-    size_t baseline_y = 4u + FONT_ASCENT;
+    size_t baseline_y = 4u;
 
     if (argc < 2) {
         print_usage(argv[0]);
@@ -320,30 +320,20 @@ int main(int argc, char** argv) {
     for (i = 0; i < codepoint_count; ++i) {
         const RasterGlyph* glyph = find_glyph(codepoints[i]);
         size_t glyph_width = fallback_width;
-        size_t above_baseline = FONT_ASCENT;
-        size_t below_baseline = FONT_DESCENT;
 
         if (glyph != NULL) {
             glyph_width = glyph->x_advance;
             if (glyph_width == 0u) {
                 glyph_width = glyph->width;
             }
-
-            if (glyph->y_offset < 0) {
-                size_t value = (size_t)(-glyph->y_offset);
-                if (value > above_baseline) {
-                    above_baseline = value;
+            if (glyph->height > 0u) {
+                int glyph_min_y = glyph->y_offset;
+                int glyph_max_y = glyph->y_offset + (int)glyph->height;
+                if (glyph_min_y < min_y) {
+                    min_y = glyph_min_y;
                 }
-            } else {
-                below_baseline += (size_t)glyph->y_offset;
-            }
-
-            if (glyph->height > above_baseline && glyph->y_offset >= 0) {
-                below_baseline = (size_t)glyph->y_offset + glyph->height;
-            } else if (glyph->height > (size_t)(-glyph->y_offset) && glyph->y_offset < 0) {
-                size_t value = glyph->height - (size_t)(-glyph->y_offset);
-                if (value > below_baseline) {
-                    below_baseline = value;
+                if (glyph_max_y > max_y) {
+                    max_y = glyph_max_y;
                 }
             }
         }
@@ -352,16 +342,10 @@ int main(int argc, char** argv) {
         if (i + 1u < codepoint_count) {
             width += spacing;
         }
-        if (above_baseline > max_above_baseline) {
-            max_above_baseline = above_baseline;
-        }
-        if (below_baseline > max_below_baseline) {
-            max_below_baseline = below_baseline;
-        }
     }
 
-    height = max_above_baseline + max_below_baseline + 8u;
-    baseline_y = 4u + max_above_baseline;
+    height = (size_t)(max_y - min_y) + 8u;
+    baseline_y = 4u + (size_t)(-min_y);
 
     image = (uint8_t*)malloc(width * height * 3u);
     if (image == NULL) {

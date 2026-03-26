@@ -244,6 +244,18 @@ def generate_cpp(glyphs: list[GlyphBitmap], settings: Settings, metrics: FontMet
         "#include <stddef.h>",
         "#include <stdint.h>",
         "",
+        "#if defined(ARDUINO)",
+        "#include <Arduino.h>",
+        "#endif",
+        "",
+        "#ifndef TTF2RASTR_STORAGE",
+        "#if defined(ARDUINO)",
+        "#define TTF2RASTR_STORAGE PROGMEM",
+        "#else",
+        "#define TTF2RASTR_STORAGE",
+        "#endif",
+        "#endif",
+        "",
         "#ifndef TTF2RASTR_GLYPH_DEFINED",
         "#define TTF2RASTR_GLYPH_DEFINED",
         "typedef struct RasterGlyph {",
@@ -267,7 +279,7 @@ def generate_cpp(glyphs: list[GlyphBitmap], settings: Settings, metrics: FontMet
             bitmap_values = "0x00"
         lines.extend(
             [
-                f"static const uint8_t {glyph_symbol}[{max(1, len(glyph.bitmap))}] = {{",
+                f"static const uint8_t {glyph_symbol}[{max(1, len(glyph.bitmap))}] TTF2RASTR_STORAGE = {{",
                 f"    {bitmap_values}",
                 "};",
                 "",
@@ -276,7 +288,7 @@ def generate_cpp(glyphs: list[GlyphBitmap], settings: Settings, metrics: FontMet
 
     lines.extend(
         [
-            f"static const RasterGlyph {symbol}_glyphs[{len(glyphs)}] = {{",
+            f"static const RasterGlyph {symbol}_glyphs[{len(glyphs)}] TTF2RASTR_STORAGE = {{",
         ]
     )
 
@@ -293,14 +305,14 @@ def generate_cpp(glyphs: list[GlyphBitmap], settings: Settings, metrics: FontMet
         [
             "};",
             "",
-            f"static const uint32_t {symbol}_chars[{len(glyphs)}] = {{{codepoint_values}}};",
+            f"static const uint32_t {symbol}_chars[{len(glyphs)}] TTF2RASTR_STORAGE = {{{codepoint_values}}};",
             "",
-            f"static const size_t {symbol}_font_size = {settings.size}u;",
-            f"static const size_t {symbol}_font_ascent = {metrics.ascent}u;",
-            f"static const size_t {symbol}_font_descent = {metrics.descent}u;",
-            f"static const size_t {symbol}_line_height = {metrics.line_height}u;",
-            f"static const size_t {symbol}_glyph_count = {len(glyphs)}u;",
-            f"static const size_t {symbol}_total_bitmap_bytes = {total_bytes}u;",
+            f"static const size_t {symbol}_font_size TTF2RASTR_STORAGE = {settings.size}u;",
+            f"static const size_t {symbol}_font_ascent TTF2RASTR_STORAGE = {metrics.ascent}u;",
+            f"static const size_t {symbol}_font_descent TTF2RASTR_STORAGE = {metrics.descent}u;",
+            f"static const size_t {symbol}_line_height TTF2RASTR_STORAGE = {metrics.line_height}u;",
+            f"static const size_t {symbol}_glyph_count TTF2RASTR_STORAGE = {len(glyphs)}u;",
+            f"static const size_t {symbol}_total_bitmap_bytes TTF2RASTR_STORAGE = {total_bytes}u;",
             "",
         ]
     )
