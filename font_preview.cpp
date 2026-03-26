@@ -5,7 +5,7 @@
 #include <string.h>
 
 #ifndef FONT_DATA_FILE
-#define FONT_DATA_FILE "generated_font.cpp"
+#define FONT_DATA_FILE "generated_font.h"
 #endif
 
 #ifndef FONT_SYMBOL_PREFIX

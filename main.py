@@ -58,7 +58,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output",
         type=Path,
-        help="Destination .cpp/.hpp file for generated C++ code.",
+        help="Destination .h/.hpp/.cpp file for generated font data.",
     )
     parser.add_argument(
         "--symbol-name",

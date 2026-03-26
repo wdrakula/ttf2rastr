@@ -1,8 +1,8 @@
 {
   "font": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-  "size": 36,
-  "chars": "ABCDEFGH0123456789абв",
-  "output": "generated_font.cpp",
+  "size": 72,
+  "chars": "0123456789_",
+  "output": "generated_font.h",
   "symbol_name": "demo_font",
   "threshold": 128
 }

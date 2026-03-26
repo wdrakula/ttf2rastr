@@ -1,8 +1,15 @@
 __pycache__/
 *.pyc
+.pytest_cache/
 
 font_preview
 preview.ppm
 sample.ppm
+build/
+Examples/Wokwi/
+
+*.swp
+*.swo
+**/.vscode/
 
 .DS_Store

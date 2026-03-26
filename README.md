@@ -6,6 +6,7 @@
 
 - генерация bitmap-глифов из выбранного набора символов
 - быстрая desktop-проверка результата через локальный preview в `PPM`
+- использование Arduino-библиотеки `ttf2rastr_gfx` с готовым примером для `ESP32 + ILI9341`
 
 Это удобно как для обычной Linux-разработки, так и как подготовка к дальнейшему использованию на микроконтроллерах.
 
@@ -33,8 +34,10 @@
 - `main.py` - генератор растрового шрифта
 - `font_preview.cpp` - desktop-preview с выводом в `PPM`
 - `Makefile` - сборка preview
+- `Examples/` - desktop-preview
+- `Arduino/ttf2rastr_gfx/` - Arduino-библиотека для отрисовки bitmap-шрифта
 - `example_config.json` - пример конфигурации
-- `generated_font.cpp` - пример сгенерированного шрифта
+- `generated_font.h` - пример сгенерированного шрифта
 - `USAGE.md` - подробная инструкция
 - `SESSION_NOTES.md` - рабочие заметки по развитию проекта
 
@@ -62,8 +65,10 @@ make
 ### 4. Проверить результат
 
 ```bash
-./font_preview 'ABC123абв' FFCC00 102040 sample.ppm
+./font_preview '0123456789_' FFCC00 102040 Examples/digits_preview.ppm
 ```
+
+В репозитории также сохранен готовый снимок для быстрой проверки: `Examples/digits_preview.png`.
 
 
 ## Пример прямого запуска
@@ -71,9 +76,9 @@ make
 ```bash
 python main.py \
   --font /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf \
-  --size 16 \
-  --chars "ABC123абв" \
-  --output generated_font.cpp \
+  --size 72 \
+  --chars "0123456789_" \
+  --output generated_font.h \
   --symbol-name demo_font
 ```
 
@@ -92,7 +97,9 @@ python main.py \
   - количество глифов
   - общий объем bitmap-данных
 
-Текущий формат подходит для desktop/Linux-проверки. Для embedded-сценариев планируется отдельный более дружественный режим адресации глифов.
+Текущий формат подходит для desktop/Linux-проверки и для Arduino-использования.
+
+`generated_font.h` содержит только данные шрифта и связанные объявления, без отдельной исполняемой логики. Поэтому header-формат здесь естественнее, чем отдельный `.cpp`.
 
 
 ## Пример `RasterGlyph`
@@ -117,7 +124,8 @@ typedef struct RasterGlyph {
 
 - генерировать рабочий output
 - корректнее раскладывать текст по baseline в preview
-- использоваться как база для следующего этапа с embedded-friendly форматом
+- использовать цифро-ориентированный набор `0123456789_` для демонстрации крупных индикаторов
+- поставлять Arduino-библиотеку с примером для `ESP32 + ILI9341`
 
 Ближайшие возможные шаги:
 
@@ -130,6 +138,7 @@ typedef struct RasterGlyph {
 
 - Подробное использование: [USAGE.md](USAGE.md)
 - Рабочие заметки: [SESSION_NOTES.md](SESSION_NOTES.md)
+- Отдельная Arduino-библиотека: [Arduino/ttf2rastr_gfx/README.md](Arduino/ttf2rastr_gfx/README.md)
 
 
 ## License

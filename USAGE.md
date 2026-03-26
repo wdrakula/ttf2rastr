@@ -54,7 +54,7 @@ python main.py \
   --font /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf \
   --size 16 \
   --chars "ABC123абв" \
-  --output generated_font.cpp \
+  --output generated_font.h \
   --symbol-name demo_font
 ```
 
@@ -175,7 +175,7 @@ python main.py --config example_config.json
 Пример:
 
 ```bash
---output generated_font.cpp
+--output generated_font.h
 ```
 
 #### `--symbol-name`
@@ -221,7 +221,7 @@ static const size_t demo_font_line_height;
   "font": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
   "size": 16,
   "chars": "ABC123абв",
-  "output": "generated_font.cpp",
+  "output": "generated_font.h",
   "symbol_name": "demo_font",
   "threshold": 128
 }
@@ -328,13 +328,13 @@ make
 
 Это использует:
 
-- файл шрифта `generated_font.cpp`
+- файл шрифта `generated_font.h`
 - префикс `demo_font`
 
 Они задаются в [Makefile](/home/wlad/Projects/Python/ttf2rastr/Makefile):
 
 ```make
-FONT_CPP ?= generated_font.cpp
+FONT_CPP ?= generated_font.h
 FONT_SYMBOL ?= demo_font
 ```
 
@@ -550,6 +550,6 @@ python -m pip install pillow
 
 - [main.py](/home/wlad/Projects/Python/ttf2rastr/main.py)
 - [example_config.json](/home/wlad/Projects/Python/ttf2rastr/example_config.json)
-- [generated_font.cpp](/home/wlad/Projects/Python/ttf2rastr/generated_font.cpp)
+- [generated_font.h](/home/wlad/Projects/Python/ttf2rastr/generated_font.h)
 - [font_preview.cpp](/home/wlad/Projects/Python/ttf2rastr/font_preview.cpp)
 - [Makefile](/home/wlad/Projects/Python/ttf2rastr/Makefile)
