@@ -70,36 +70,13 @@ static void ttf2rastrWriteGlyph(Adafruit_GFX& display, int16_t origin_x,
                                 uint16_t color) {
   const int16_t draw_x = origin_x + glyph->x_offset;
   const int16_t draw_y = baseline_y + glyph->y_offset;
-  const size_t stride = (glyph->width + 7u) / 8u;
 
-  for (uint16_t row = 0; row < glyph->height; ++row) {
-    uint16_t col = 0;
-
-    while (col < glyph->width) {
-      const size_t byte_index = row * stride + (col / 8u);
-      const uint8_t mask = (uint8_t)(0x80u >> (col % 8u));
-
-      if (byte_index >= glyph->bitmap_size ||
-          (glyph->bitmap[byte_index] & mask) == 0u) {
-        ++col;
-        continue;
-      }
-
-      const uint16_t run_start = col;
-      while (col < glyph->width) {
-        const size_t run_byte_index = row * stride + (col / 8u);
-        const uint8_t run_mask = (uint8_t)(0x80u >> (col % 8u));
-        if (run_byte_index >= glyph->bitmap_size ||
-            (glyph->bitmap[run_byte_index] & run_mask) == 0u) {
-          break;
-        }
-        ++col;
-      }
-
-      display.writeFastHLine(draw_x + (int16_t)run_start, draw_y + (int16_t)row,
-                             col - run_start, color);
-    }
+  if (glyph->bitmap == NULL || glyph->width == 0u || glyph->height == 0u) {
+    return;
   }
+
+  display.drawBitmap(draw_x, draw_y, glyph->bitmap, glyph->width, glyph->height,
+                     color);
 }
 
 const RasterGlyph* ttf2rastrFindGlyph(const RasterFont* font, uint32_t codepoint) {
@@ -192,7 +169,6 @@ void ttf2rastrDrawGlyph(Adafruit_GFX& display, const RasterFont* font, int16_t x
                         uint16_t missing_color) {
   const RasterGlyph* glyph = ttf2rastrFindGlyph(font, codepoint);
 
-  display.startWrite();
   if (glyph != NULL) {
     ttf2rastrWriteGlyph(display, x, baseline_y, glyph, color);
   } else {
@@ -201,7 +177,6 @@ void ttf2rastrDrawGlyph(Adafruit_GFX& display, const RasterFont* font, int16_t x
     ttf2rastrWriteMissingGlyph(display, x, baseline_y, box_w, box_h,
                                missing_color);
   }
-  display.endWrite();
 }
 
 int16_t ttf2rastrDrawText(Adafruit_GFX& display, const RasterFont* font, int16_t x,
@@ -213,8 +188,6 @@ int16_t ttf2rastrDrawText(Adafruit_GFX& display, const RasterFont* font, int16_t
   if (font == NULL || text == NULL) {
     return 0;
   }
-
-  display.startWrite();
 
   while (*src != '\0') {
     const uint32_t codepoint = ttf2rastrNextCodepoint(&src);
@@ -231,8 +204,6 @@ int16_t ttf2rastrDrawText(Adafruit_GFX& display, const RasterFont* font, int16_t
 
     pen_x += (int16_t)ttf2rastrGlyphAdvance(font, glyph);
   }
-
-  display.endWrite();
   return pen_x - x;
 }
 

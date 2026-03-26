@@ -47,19 +47,34 @@ typedef struct RasterTextPlacement {
         symbol_prefix##_font_descent, symbol_prefix##_line_height             \
   }
 
+// Returns a pointer to the glyph for the given codepoint, or NULL if absent.
 const RasterGlyph* ttf2rastrFindGlyph(const RasterFont* font, uint32_t codepoint);
+
+// Returns xAdvance for a codepoint, or a fallback width if the glyph is missing.
 uint16_t ttf2rastrGlyphAdvance(const RasterFont* font, uint32_t codepoint);
+
+// Measures text width and vertical bounds relative to the baseline.
 RasterTextMetrics ttf2rastrMeasureText(const RasterFont* font, const char* text);
+
+// Converts measured vertical bounds into total text height.
 int16_t ttf2rastrTextHeight(const RasterTextMetrics* metrics);
+
+// Computes centered text placement inside a rectangle.
 RasterTextPlacement ttf2rastrPlaceTextInBox(const RasterFont* font, int16_t box_x,
                                             int16_t box_y, int16_t box_w,
                                             int16_t box_h, const char* text);
+
+// Draws a single glyph at the specified pen position and baseline.
 void ttf2rastrDrawGlyph(Adafruit_GFX& display, const RasterFont* font, int16_t x,
                         int16_t baseline_y, uint32_t codepoint, uint16_t color,
                         uint16_t missing_color);
+
+// Draws a whole UTF-8 string starting from x/baseline_y and returns drawn width.
 int16_t ttf2rastrDrawText(Adafruit_GFX& display, const RasterFont* font, int16_t x,
                           int16_t baseline_y, const char* text, uint16_t color,
                           uint16_t missing_color);
+
+// Clears a rectangle and draws centered text inside it.
 void ttf2rastrDrawTextInBox(Adafruit_GFX& display, const RasterFont* font,
                             int16_t box_x, int16_t box_y, int16_t box_w,
                             int16_t box_h, const char* text, uint16_t text_color,

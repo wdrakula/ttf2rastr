@@ -1,6 +1,7 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+LOCAL_SESSION.md
 
 font_preview
 preview.ppm
