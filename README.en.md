@@ -37,6 +37,7 @@ The project currently focuses on three practical use cases:
 - `example_config.json` - sample generator config
 - `generated_font.h` - sample generated font
 - `USAGE.md` - detailed usage guide
+- `Web/` - browser version; output may differ from `main.py` because it uses a different rendering engine
 
 ## Quick Start
 

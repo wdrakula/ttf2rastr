@@ -12,6 +12,10 @@ preview.ppm
 sample.ppm
 build/
 Examples/Wokwi/
+Examples/web_*.h
+Examples/web_*.ppm
+Examples/web_*.png
+local_sandbox/
 
 *.swp
 *.swo

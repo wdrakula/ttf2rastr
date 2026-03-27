@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ttf2rastr Web</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="page">
+      <section class="panel controls">
+        <h1>ttf2rastr Web</h1>
+        <p class="lead">
+          Локальная браузерная версия конвертера TTF/OTF в 1-битный C/C++ header.
+        </p>
+
+        <div class="field">
+          <label for="fontFile">Файл шрифта</label>
+          <input id="fontFile" type="file" accept=".ttf,.otf,.woff,.woff2,font/ttf,font/otf">
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label for="fontSize">Размер, px</label>
+            <input id="fontSize" type="number" min="1" value="32">
+          </div>
+          <div class="field">
+            <label for="threshold">Threshold</label>
+            <input id="threshold" type="number" min="0" max="255" value="128">
+          </div>
+        </div>
+
+        <div class="grid">
+          <div class="field">
+            <label for="symbolName">Symbol name</label>
+            <input id="symbolName" type="text" value="web_font">
+          </div>
+          <div class="field">
+            <label for="outputName">Файл вывода</label>
+            <input id="outputName" type="text" value="generated_font.h">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="chars">Символы</label>
+          <textarea id="chars" rows="6">0123456789ABCDEFабвгдеёжзийклмнопрстуфхцчшщъыьэюя</textarea>
+        </div>
+
+        <div class="field">
+          <label for="previewText">Текст для preview</label>
+          <input id="previewText" type="text" value="FACE 0123 абв">
+        </div>
+
+        <div class="actions">
+          <button id="generateButton" type="button">Сгенерировать</button>
+          <button id="downloadButton" type="button" disabled>Скачать header</button>
+          <button id="copyButton" type="button" disabled>Копировать header</button>
+        </div>
+
+        <p id="status" class="status">Выберите файл шрифта и нажмите «Сгенерировать».</p>
+      </section>
+
+      <section class="panel preview-panel">
+        <h2>Preview из bitmap-массива</h2>
+        <canvas id="previewCanvas" width="960" height="280"></canvas>
+        <div id="metrics" class="metrics"></div>
+      </section>
+
+      <section class="panel output-panel">
+        <h2>Сгенерированный header</h2>
+        <textarea id="output" rows="24" spellcheck="false" readonly></textarea>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
