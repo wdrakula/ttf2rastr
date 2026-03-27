@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "author": "Vladislav Lepakhin",
+  "editor": "wokwi",
+  "parts": [
+    { "type": "board-esp32-devkit-c-v4", "id": "esp", "top": 0, "left": 0, "attrs": {} },
+    { "type": "wokwi-ili9341", "id": "lcd1", "top": -76, "left": -201.9, "attrs": {} }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "esp:3V3", "lcd1:VCC", "red", [ "h-23.81", "v-105.6", "h230.4", "v374.4", "h-364.8" ] ],
+    [ "lcd1:GND", "esp:GND.2", "black", [ "v76.8", "h345.6", "v-355.2", "h-86.4", "v96" ] ],
+    [ "lcd1:RST", "esp:4", "cyan", [ "v57.6", "h307.2", "v-316.8", "h-48", "v192" ] ],
+    [ "lcd1:D/C", "esp:2", "yellow", [ "v48", "h288", "v-297.6", "h-28.8", "v201.6" ] ],
+    [ "lcd1:CS", "esp:15", "white", [ "v67.2", "h326.4", "v-172.8" ] ],
+    [ "lcd1:MOSI", "esp:23", "#8f4814", [ "v38.4", "h268.79", "v-163.2" ] ],
+    [ "lcd1:SCK", "esp:18", "green", [ "v28.8", "h249.59", "v-201.6" ] ],
+    [ "lcd1:LED", "esp:3V3", "red", [ "v19.2", "h76.79", "v-201.6" ] ],
+    [ "lcd1:MISO", "esp:19", "gray", [ "v9.6", "h201.59", "v-144" ] ]
+  ],
+  "dependencies": {}
+}

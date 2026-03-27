@@ -1,0 +1,4 @@
+[wokwi]
+version=1
+firmware = 'build/ESP32_ILI9341_CyrillicDemo.ino.bin'
+elf = 'build/ESP32_ILI9341_CyrillicDemo.ino.elf'

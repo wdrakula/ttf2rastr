@@ -12,6 +12,7 @@
 - `src/ttf2rastr_gfx.h`
 - `src/ttf2rastr_gfx.cpp`
 - `examples/ESP32_ILI9341_FrameDemo/`
+- `examples/ESP32_ILI9341_CyrillicDemo/`
 
 ## Как установить локально
 
@@ -94,6 +95,32 @@ static const RasterFont DEMO_FONT = TTF2RASTR_MAKE_FONT(demo_font);
 - возвращает фактическую ширину нарисованного текста
 - полезно, если нужно рисовать несколько строк или элементов подряд
 
+## UTF-8 и Unicode
+
+Библиотека принимает обычные `const char*` строки в UTF-8.
+
+Это значит, что в скетче можно писать прямо так:
+
+```cpp
+ttf2rastrDrawText(tft, &font, x, baseline, "АБВ", ILI9341_YELLOW, ILI9341_RED);
+```
+
+Кириллическая буква в UTF-8 занимает несколько байт, но библиотека не ищет глиф "по байтам строки".
+Сначала UTF-8 декодируется в один Unicode `codepoint`, и уже потом вызывается поиск по `uint32_t`.
+
+То есть путь такой:
+
+- `"А"` в UTF-8 -> байты `D0 90`
+- декодирование -> `U+0410`
+- поиск глифа -> `ttf2rastrFindGlyph(font, 0x0410)`
+
+Для обычного использования вручную писать `0x0410` не нужно.
+Достаточно:
+
+- сгенерировать шрифт с нужными символами
+- писать текст в UTF-8 прямо в исходнике
+- передавать строку в `ttf2rastrDrawText()` или `ttf2rastrDrawTextInBox()`
+
 `ttf2rastrDrawTextInBox(Adafruit_GFX& display, const RasterFont* font, int16_t box_x, int16_t box_y, int16_t box_w, int16_t box_h, const char* text, uint16_t text_color, uint16_t bg_color, uint16_t missing_color)`
 
 - очищает прямоугольник
@@ -123,3 +150,10 @@ static const RasterFont DEMO_FONT = TTF2RASTR_MAKE_FONT(demo_font);
 ## Живой пример
 
 - `examples/ESP32_ILI9341_FrameDemo`
+- `examples/ESP32_ILI9341_CyrillicDemo`
+
+Новый кириллический пример показывает:
+
+- вывод последовательности `А Б В Г Д Е Ж`
+- работу со строковыми UTF-8 литералами в обычном Arduino-скетче
+- как при желании получить `codepoint` прямо из строки `"А"` для отладки или диагностики

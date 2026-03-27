@@ -1,0 +1,7 @@
+{
+  "font": "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+  "size": 96,
+  "chars": "АБВГДЕЖ",
+  "output": "Arduino/ttf2rastr_gfx/examples/ESP32_ILI9341_CyrillicDemo/generated_cyrillic_font.h",
+  "symbol_name": "cyrillic_demo_font"
+}

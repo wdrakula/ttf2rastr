@@ -7,6 +7,7 @@ The project currently focuses on three practical use cases:
 - generating bitmap glyphs for a selected character set
 - quickly previewing the result on desktop as a `PPM` image
 - using the generated font data together with the `ttf2rastr_gfx` Arduino helper library
+- using the generated font data together with ASCII and UTF-8/Unicode Arduino examples
 
 ## Features
 
@@ -125,10 +126,13 @@ It handles:
 - whole-text drawing
 - single-glyph drawing
 
+It also works with UTF-8 text on Arduino, including Cyrillic, by decoding the input string into Unicode codepoints before glyph lookup.
+
 See:
 
 - [Arduino/ttf2rastr_gfx/README.md](/home/wlad/Projects/Python/ttf2rastr/Arduino/ttf2rastr_gfx/README.md)
 - [Arduino/ttf2rastr_gfx/README.en.md](/home/wlad/Projects/Python/ttf2rastr/Arduino/ttf2rastr_gfx/README.en.md)
+- [Arduino/ttf2rastr_gfx/examples/ESP32_ILI9341_CyrillicDemo/ESP32_ILI9341_CyrillicDemo.ino](/home/wlad/Projects/Python/ttf2rastr/Arduino/ttf2rastr_gfx/examples/ESP32_ILI9341_CyrillicDemo/ESP32_ILI9341_CyrillicDemo.ino)
 
 ## Documentation
 

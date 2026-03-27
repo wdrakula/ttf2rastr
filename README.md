@@ -7,6 +7,7 @@
 - генерация bitmap-глифов из выбранного набора символов
 - быстрая desktop-проверка результата через локальный preview в `PPM`
 - использование Arduino-библиотеки `ttf2rastr_gfx` с готовым примером для `ESP32 + ILI9341`
+- использование Arduino-библиотеки `ttf2rastr_gfx` с ASCII и UTF-8/Unicode примерами для `ESP32 + ILI9341`
 
 Это удобно как для обычной Linux-разработки, так и как подготовка к дальнейшему использованию на микроконтроллерах.
 
@@ -125,6 +126,25 @@ typedef struct RasterGlyph {
 - хранить метрики глифов и шрифта в формате, пригодном для preview и embedded-рендера
 - корректно раскладывать текст по baseline в desktop-preview
 - поставлять Arduino-библиотеку с примером для `ESP32 + ILI9341`
+- рендерить UTF-8 строки на Arduino, включая кириллицу, через Unicode codepoint lookup
+
+## Arduino и Unicode
+
+Arduino-часть проекта работает с обычными UTF-8 строками `const char*`.
+
+Это значит, что в скетче можно писать:
+
+```cpp
+ttf2rastrDrawText(tft, &font, x, baseline, "АБВ", ILI9341_YELLOW, ILI9341_RED);
+```
+
+Кириллический символ в строке занимает больше одного байта, но библиотека:
+
+- декодирует UTF-8
+- получает Unicode `codepoint`
+- ищет глиф по `uint32_t`
+
+Поэтому пользователю обычно не нужно вручную оперировать `wchar_t` или заранее выписывать `0x0410`.
 
 Ближайшие возможные шаги:
 
@@ -136,6 +156,7 @@ typedef struct RasterGlyph {
 
 - Подробное использование: [USAGE.md](USAGE.md)
 - Отдельная Arduino-библиотека: [Arduino/ttf2rastr_gfx/README.md](Arduino/ttf2rastr_gfx/README.md)
+- Кириллический Arduino-пример: [Arduino/ttf2rastr_gfx/examples/ESP32_ILI9341_CyrillicDemo/ESP32_ILI9341_CyrillicDemo.ino](Arduino/ttf2rastr_gfx/examples/ESP32_ILI9341_CyrillicDemo/ESP32_ILI9341_CyrillicDemo.ino)
 
 
 ## License

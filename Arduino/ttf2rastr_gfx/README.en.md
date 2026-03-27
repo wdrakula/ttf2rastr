@@ -12,6 +12,7 @@ In the current version glyph rendering uses `Adafruit_GFX::drawBitmap()`, while 
 - `src/ttf2rastr_gfx.h`
 - `src/ttf2rastr_gfx.cpp`
 - `examples/ESP32_ILI9341_FrameDemo/`
+- `examples/ESP32_ILI9341_CyrillicDemo/`
 
 ## Local Installation
 
@@ -79,6 +80,32 @@ static const RasterFont DEMO_FONT = TTF2RASTR_MAKE_FONT(demo_font);
 - draws a full UTF-8 string
 - returns the drawn width
 
+## UTF-8 and Unicode
+
+The library accepts ordinary UTF-8 `const char*` strings.
+
+That means a sketch can simply do:
+
+```cpp
+ttf2rastrDrawText(tft, &font, x, baseline, "АБВ", ILI9341_YELLOW, ILI9341_RED);
+```
+
+A Cyrillic letter occupies multiple bytes in UTF-8, but glyph lookup is not done byte-by-byte.
+The library first decodes UTF-8 into a single Unicode codepoint and then looks up the glyph by `uint32_t`.
+
+So the flow is:
+
+- `"А"` in UTF-8 -> bytes `D0 90`
+- decode -> `U+0410`
+- glyph lookup -> `ttf2rastrFindGlyph(font, 0x0410)`
+
+For normal usage you do not need to hardcode `0x0410` yourself.
+Just:
+
+- generate a font that contains the needed symbols
+- write UTF-8 text directly in the sketch source
+- pass that string into `ttf2rastrDrawText()` or `ttf2rastrDrawTextInBox()`
+
 `ttf2rastrDrawTextInBox(Adafruit_GFX& display, const RasterFont* font, int16_t box_x, int16_t box_y, int16_t box_w, int16_t box_h, const char* text, uint16_t text_color, uint16_t bg_color, uint16_t missing_color)`
 
 - clears a rectangle
@@ -101,3 +128,4 @@ So using a header is more natural than compiling a separate `.cpp` file just for
 See:
 
 - `examples/ESP32_ILI9341_FrameDemo`
+- `examples/ESP32_ILI9341_CyrillicDemo`
