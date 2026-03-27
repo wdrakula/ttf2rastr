@@ -14,7 +14,8 @@ The project currently focuses on three practical use cases:
 - loads TTF/OTF fonts through Pillow
 - renders only the requested characters
 - packs glyphs into 1-bit `uint8_t` bitmap arrays
-- generates plain C-style structures and arrays without STL
+- generates a `.h` header with plain C-style structures and arrays without STL
+- emits `TTF2RASTR_STORAGE`, which maps to `PROGMEM` on Arduino builds
 - stores glyph metrics:
   - `x_offset`
   - `y_offset`
@@ -35,7 +36,6 @@ The project currently focuses on three practical use cases:
 - `example_config.json` - sample generator config
 - `generated_font.h` - sample generated font
 - `USAGE.md` - detailed usage guide
-- `SESSION_NOTES.md` - project notes
 
 ## Quick Start
 
@@ -94,6 +94,7 @@ The generator produces a C/C++ include file containing:
   - total bitmap byte size
 
 `generated_font.h` contains only font data and related declarations, not executable logic, so a header format is more natural than a separate `.cpp` translation unit.
+On Arduino, the same generated declarations are automatically marked with `PROGMEM`.
 
 ## Example `RasterGlyph`
 
@@ -132,7 +133,6 @@ See:
 ## Documentation
 
 - Detailed usage: [USAGE.md](/home/wlad/Projects/Python/ttf2rastr/USAGE.md)
-- Project notes: [SESSION_NOTES.md](/home/wlad/Projects/Python/ttf2rastr/SESSION_NOTES.md)
 - Arduino library docs: [Arduino/ttf2rastr_gfx/README.md](/home/wlad/Projects/Python/ttf2rastr/Arduino/ttf2rastr_gfx/README.md)
 
 ## License
