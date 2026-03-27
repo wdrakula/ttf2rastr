@@ -1,7 +1,11 @@
 __pycache__/
 *.pyc
 .pytest_cache/
+# Local AI / pairing session notes
 LOCAL_SESSION.md
+SESSION_NOTES.md
+*_SESSION*.md
+*SESSION_NOTES*.md
 
 font_preview
 preview.ppm
