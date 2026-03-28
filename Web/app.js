@@ -287,7 +287,7 @@ function packBitsFromImage(rgba, width, height, threshold) {
   return result;
 }
 
-function findInkBounds(rgba, width, height, minAlpha) {
+function findInkBounds(rgba, width, height, minValue) {
   let left = width;
   let top = height;
   let right = -1;
@@ -295,8 +295,13 @@ function findInkBounds(rgba, width, height, minAlpha) {
 
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
-      const alpha = rgba[(y * width + x) * 4 + 3];
-      if (alpha >= minAlpha) {
+      const pixelIndex = (y * width + x) * 4;
+      const value = Math.max(
+        rgba[pixelIndex],
+        rgba[pixelIndex + 1],
+        rgba[pixelIndex + 2]
+      );
+      if (value >= minValue) {
         if (x < left) {
           left = x;
         }
@@ -422,6 +427,7 @@ function drawBitmapPreview() {
   const baseline = previewConfig.paddingY + metrics.ascent;
   let cursorX = previewConfig.paddingX;
   const missingAdvance = Math.max(4, Math.round(generatedState.settings.size * 0.6));
+  let previewBitmapBytes = 0;
 
   for (const char of text) {
     const codepoint = char.codePointAt(0);
@@ -430,11 +436,16 @@ function drawBitmapPreview() {
     if (glyph) {
       drawGlyphBitmap(context, cursorX, baseline, glyph, previewConfig.foreground);
       cursorX += glyph.xAdvance;
+      previewBitmapBytes += glyph.bitmap.length;
     } else {
       drawMissingGlyph(context, cursorX, baseline - metrics.ascent, missingAdvance, metrics.lineHeight);
       cursorX += missingAdvance;
     }
   }
+
+  const maxGlyphWidth = glyphs.reduce((max, glyph) => Math.max(max, glyph.width), 0);
+  const maxGlyphHeight = glyphs.reduce((max, glyph) => Math.max(max, glyph.height), 0);
+  const maxGlyphBytes = glyphs.reduce((max, glyph) => Math.max(max, glyph.bitmap.length), 0);
 
   context.strokeStyle = "rgba(255,255,255,0.25)";
   context.beginPath();
@@ -447,6 +458,10 @@ function drawBitmapPreview() {
     `ascent: ${metrics.ascent}`,
     `descent: ${metrics.descent}`,
     `line height: ${metrics.lineHeight}`,
+    `max glyph: ${maxGlyphWidth}x${maxGlyphHeight}`,
+    `max glyph bytes: ${maxGlyphBytes}`,
+    `font bitmap bytes: ${glyphs.reduce((sum, glyph) => sum + glyph.bitmap.length, 0)}`,
+    `preview bitmap bytes: ${previewBitmapBytes}`,
     `preview text width: ${cursorX - previewConfig.paddingX}px`,
   ].join(" | ");
 }
